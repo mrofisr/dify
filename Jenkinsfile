@@ -80,24 +80,30 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    sh "rm -rf dify-kubernetes"
-                    sh "git clone https://github.com/mrofisr/dify-kubernetes"
-                    if (MODULES.contains('web') && MODULES.contains('api')) {
-                        echo 'Deploying both Dify Web and Dify API App...'
-                        sh "sed -i 's|{{VERSION}}|${GIT_TAG}|g' dify-kubernetes/dify-web/deployment.yaml"
-                        sh "kubectl apply -f dify-kubernetes/dify-web/deployment.yaml"
-                        sh "sed -i 's|{{VERSION}}|${GIT_TAG}|g' dify-kubernetes/dify-api/deployment.yaml"
-                        sh "kubectl apply -f dify-kubernetes/dify-api/deployment.yaml"
-                    } else if (MODULES.contains('web')) {
-                        echo 'Deploying Dify Web App...'
-                        sh "sed -i 's|{{VERSION}}|${GIT_TAG}|g' dify-kubernetes/dify-web/deployment.yaml"
-                        sh "kubectl apply -f dify-kubernetes/dify-web/deployment.yaml"
-                    } else if (MODULES.contains('api')) {
-                        echo 'Deploying Dify API...'
-                        sh "sed -i 's|{{VERSION}}|${GIT_TAG}|g' dify-kubernetes/dify-api/deployment.yaml"
-                        sh "kubectl apply -f dify-kubernetes/dify-api/deployment.yaml"
-                    } else {
-                        error "No valid module found to push"
+                    withCredentials(file('minikube')) {
+                        sh "mkdir -p ~/.kube"
+                        sh "cp minikube ~/.kube/config"
+                        sh "kubectl config use-context minikube"
+                        sh "kubectl get nodes"
+                        sh "rm -rf dify-kubernetes"
+                        sh "git clone https://github.com/mrofisr/dify-kubernetes"
+                        if (MODULES.contains('web') && MODULES.contains('api')) {
+                            echo 'Deploying both Dify Web and Dify API App...'
+                            sh "sed -i 's|{{VERSION}}|${GIT_TAG}|g' dify-kubernetes/dify-web/deployment.yaml"
+                            sh "kubectl apply -f dify-kubernetes/dify-web/deployment.yaml"
+                            sh "sed -i 's|{{VERSION}}|${GIT_TAG}|g' dify-kubernetes/dify-api/deployment.yaml"
+                            sh "kubectl apply -f dify-kubernetes/dify-api/deployment.yaml"
+                        } else if (MODULES.contains('web')) {
+                            echo 'Deploying Dify Web App...'
+                            sh "sed -i 's|{{VERSION}}|${GIT_TAG}|g' dify-kubernetes/dify-web/deployment.yaml"
+                            sh "kubectl apply -f dify-kubernetes/dify-web/deployment.yaml"
+                        } else if (MODULES.contains('api')) {
+                            echo 'Deploying Dify API...'
+                            sh "sed -i 's|{{VERSION}}|${GIT_TAG}|g' dify-kubernetes/dify-api/deployment.yaml"
+                            sh "kubectl apply -f dify-kubernetes/dify-api/deployment.yaml"
+                        } else {
+                            error "No valid module found to push"
+                        }
                     }
                 }
             }
