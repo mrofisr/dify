@@ -80,6 +80,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
+                    sh "rm -rf dify-kubernetes"
                     sh "git clone https://github.com/mrofisr/dify-kubernetes"
                     if (MODULES.contains('web') && MODULES.contains('api')) {
                         echo 'Deploying both Dify Web and Dify API App...'
