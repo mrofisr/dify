@@ -34,14 +34,14 @@ pipeline {
                 script {
                     if (MODULES.contains('web') && MODULES.contains('api')) {
                         echo 'Building both Web and API Docker images...'
-                        sh "docker build -t ghcr.io/mrofisr/dify-api:${GIT_TAG} api"
-                        sh "docker build -t ghcr.io/mrofisr/dify-web:${GIT_TAG} web"
+                        sh "docker build -t ghcr.io/mrofisr/dify/api:${GIT_TAG} api"
+                        sh "docker build -t ghcr.io/mrofisr/dify/web:${GIT_TAG} web"
                     } else if (MODULES.contains('web')) {
                         echo 'Building Web Docker image...'
-                        sh "docker build -t ghcr.io/mrofisr/dify-web:${GIT_TAG} web"
+                        sh "docker build -t ghcr.io/mrofisr/dify/web:${GIT_TAG} web"
                     } else if (MODULES.contains('api')) {
                         echo 'Building API Docker image...'
-                        sh "docker build -t ghcr.io/mrofisr/dify-api:${GIT_TAG} api"
+                        sh "docker build -t ghcr.io/mrofisr/dify/api:${GIT_TAG} api"
                     } else {
                         error "No valid module found to build"
                     }
@@ -63,14 +63,14 @@ pipeline {
                 script {
                     if (MODULES.contains('web') && MODULES.contains('api')) {
                         echo 'Pushing both Web and API Docker images...'
-                        sh "docker push ghcr.io/mrofisr/dify-web:${GIT_TAG}"
-                        sh "docker push ghcr.io/mrofisr/dify-api:${GIT_TAG}"
+                        sh "docker push ghcr.io/mrofisr/dify/web:${GIT_TAG}"
+                        sh "docker push ghcr.io/mrofisr/dify/api:${GIT_TAG}"
                     } else if (MODULES.contains('web')) {
                         echo 'Pushing Web Docker image...'
-                        sh "docker push ghcr.io/mrofisr/dify-web:${GIT_TAG}"
+                        sh "docker push ghcr.io/mrofisr/dify/web:${GIT_TAG}"
                     } else if (MODULES.contains('api')) {
                         echo 'Pushing API Docker image...'
-                        sh "docker push ghcr.io/mrofisr/dify-api:${GIT_TAG}"
+                        sh "docker push ghcr.io/mrofisr/dify/api:${GIT_TAG}"
                     } else {
                         error "No valid module found to push"
                     }
