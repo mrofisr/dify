@@ -16,8 +16,9 @@ spec:
     spec:
       containers:
         - name: redis
-          image: redis:7-alpine
-          command: ["redis-server", "/data/redis.conf"]
+          image: redis:6-alpine
+          command: ["redis-server"]
+          args: ["/data/redis.conf"]
           ports:
             - name: redis
               containerPort: 6379
@@ -26,28 +27,21 @@ spec:
             exec:
               command:
                 - redis-cli
+                - $(hostname)
                 - ping
             initialDelaySeconds: 30
+            timeoutSeconds: 4
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - $(hostname)
+                - ping
+            initialDelaySeconds: 5
             timeoutSeconds: 4
           volumeMounts:
             - name: config-volume
               mountPath: /data
-          env:
-            - name: REDIS_MASTER_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: redis-secret
-                  key: REDIS_MASTER_PASSWORD
-            - name: REDIS_MASTER_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: redis-secret
-                  key: REDIS_MASTER_USERNAME
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: redis-secret
-                  key: REDIS_PASSWORD
       initContainers:
         - name: config-substitute
           image: alpine:3.12
@@ -55,7 +49,7 @@ spec:
             [
               "sh",
               "-c",
-              "apk add --no-cache gettext && envsubst < /config/redis.conf > /data/redis.conf",
+              "apk add --no-cache gettext && echo 'Modify Config' && envsubst < /config/redis.conf > /data/redis.conf",
             ]
           env:
             - name: REDIS_MASTER_PASSWORD

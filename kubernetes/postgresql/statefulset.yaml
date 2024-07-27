@@ -22,14 +22,13 @@ spec:
               containerPort: 5432
               protocol: TCP
           livenessProbe:
-            livenessProbe:
-              exec:
-                command:
-                  - "pg_isready"
-                  - "-U"
-                  - "$(POSTGRES_USER)"
-                  - "-d"
-                  - "$(POSTGRES_DB)"
+            exec:
+              command:
+                - "pg_isready"
+                - "-U"
+                - "$(POSTGRES_USER)"
+                - "-d"
+                - "$(POSTGRES_DB)"
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 2

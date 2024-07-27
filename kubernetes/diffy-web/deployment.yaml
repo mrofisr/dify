@@ -26,5 +26,3 @@ spec:
               value: "http://dify-api.dify.svc.cluster.local"
             - name: APP_API_URL
               value: "http://dify-api.dify.svc.cluster.local"
-            - name: SENTRY_DSN
-              value: ""

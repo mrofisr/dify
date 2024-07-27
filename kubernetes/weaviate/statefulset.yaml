@@ -27,17 +27,6 @@ spec:
             - name: weaviate
               containerPort: 8080
               protocol: TCP
-          liveProbe:
-            exec:
-              command:
-                - "curl"
-                - "-f"
-                - "http://localhost:8080/v1/.well-known/ready"
-            initialDelaySeconds: 5
-            periodSeconds: 5
-            timeoutSeconds: 2
-            successThreshold: 1
-            failureThreshold: 10
           env:
             - name: QUERY_DEFAULTS_LIMIT
               value: "25"
@@ -50,13 +39,22 @@ spec:
             - name: "AUTHENTICATION_APIKEY_ENABLED"
               value: "true"
             - name: "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
-              value: "WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih"
+              valueFrom:
+                secretKeyRef:
+                  name: dify-weaviate
+                  key: AUTHENTICATION_APIKEY_ALLOWED_KEYS
             - name: "AUTHENTICATION_APIKEY_USERS"
-              value: "hello@dify.ai"
+              valueFrom:
+                secretKeyRef:
+                  name: dify-weaviate
+                  key: AUTHENTICATION_APIKEY_USERS
             - name: "AUTHORIZATION_ADMINLIST_ENABLED"
               value: "true"
             - name: "AUTHORIZATION_ADMINLIST_USERS"
-              value: "hello@dify.ai"
+              valueFrom:
+                secretKeyRef:
+                  name: dify-weaviate
+                  key: AUTHENTICATION_APIKEY_USERS
           volumeMounts:
             - name: weaviate-data
               mountPath: /var/lib/weaviate
