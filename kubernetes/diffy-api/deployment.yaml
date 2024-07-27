@@ -121,10 +121,8 @@ spec:
             - name: REDIS_DB
               value: "0"
             - name: CELERY_BROKER_URL
-              valueFrom:
-                secretKeyRef:
-                  name: dify-api
-                  key: CELERY_BROKER_URL
+              value: >-
+                redis://$(REDIS_USERNAME):$(REDIS_PASSWORD)@$(REDIS_HOST):$(REDIS_PORT)/1
             - name: BROKER_USE_SSL
               value: "false"
             - name: WEB_API_CORS_ALLOW_ORIGINS
