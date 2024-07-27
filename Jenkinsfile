@@ -82,7 +82,7 @@ pipeline {
                 script {
                     withCredentials([file(credentialsId: 'minikube', variable: 'minikube')]) {
                         sh "mkdir -p ~/.kube"
-                        sh "cp minikube ~/.kube/config"
+                        sh "cp $minikube ~/.kube/config"
                         sh "kubectl config use-context minikube"
                         sh "kubectl get nodes"
                         sh "rm -rf dify-kubernetes"
