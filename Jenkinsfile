@@ -80,7 +80,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    withCredentials(file('minikube')) {
+                    withCredentials([file(credentialsId: 'minikube', variable: 'minikube')]) {
                         sh "mkdir -p ~/.kube"
                         sh "cp minikube ~/.kube/config"
                         sh "kubectl config use-context minikube"
