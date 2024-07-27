@@ -34,8 +34,8 @@ pipeline {
                 script {
                     if (MODULES.contains('web') && MODULES.contains('api')) {
                         echo 'Building both Web and API Docker images...'
-                        sh "docker build -t ghcr.io/mrofisr/dify-web:${GIT_TAG} web"
                         sh "docker build -t ghcr.io/mrofisr/dify-api:${GIT_TAG} api"
+                        sh "docker build -t ghcr.io/mrofisr/dify-web:${GIT_TAG} web"
                     } else if (MODULES.contains('web')) {
                         echo 'Building Web Docker image...'
                         sh "docker build -t ghcr.io/mrofisr/dify-web:${GIT_TAG} web"
@@ -52,8 +52,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'container_registry', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        echo "Logging in to Docker registry ${DOCKER_REGISTRY}"
-                        sh "echo $DOCKER_PASSWORD | docker login ${DOCKER_REGISTRY} -u $DOCKER_USER --password-stdin"
+                        echo "Logging in to Docker registry"
+                        sh "echo $DOCKER_PASSWORD | docker login ghcr.io -u $DOCKER_USER --password-stdin"
                     }
                 }
             }
