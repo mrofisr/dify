@@ -34,14 +34,14 @@ pipeline {
                 script {
                     if (MODULES.contains('web') && MODULES.contains('api')) {
                         echo 'Building both Web and API Docker images...'
-                        sh "docker build -t ghcr.io/mrofisr/dify-web:${GIT_TAG} -f web"
-                        sh "docker build -t ghcr.io/mrofisr/dify-api:${GIT_TAG} -f api"
+                        sh "docker build -t ghcr.io/mrofisr/dify-web:${GIT_TAG} web"
+                        sh "docker build -t ghcr.io/mrofisr/dify-api:${GIT_TAG} api"
                     } else if (MODULES.contains('web')) {
                         echo 'Building Web Docker image...'
-                        sh "docker build -t ghcr.io/mrofisr/dify-web:${GIT_TAG} -f web"
+                        sh "docker build -t ghcr.io/mrofisr/dify-web:${GIT_TAG} web"
                     } else if (MODULES.contains('api')) {
                         echo 'Building API Docker image...'
-                        sh "docker build -t ghcr.io/mrofisr/dify-api:${GIT_TAG} -f api"
+                        sh "docker build -t ghcr.io/mrofisr/dify-api:${GIT_TAG} api"
                     } else {
                         error "No valid module found to build"
                     }
